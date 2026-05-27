@@ -1,11 +1,13 @@
-// MainApp.java
 package com.igirepay.igirepay;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lab1.Customer;
+import lab3.DashboardController;
+
+import java.io.IOException;
 
 public class MainApp extends Application {
 
@@ -14,52 +16,65 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
+        primaryStage.setTitle("IgirePay — Igire Rwanda Organization");
+        primaryStage.setMinWidth(900);
+        primaryStage.setMinHeight(600);
         showLogin();
+        primaryStage.show();
     }
 
     public static void showLogin() {
         try {
-            Parent root = FXMLLoader.load(MainApp.class.getResource("/lab3/Login.fxml"));
-            Scene scene = new Scene(root, 400, 600);
-            scene.getStylesheets().add(MainApp.class.getResource("/lab3/styles.css").toExternalForm());
+            FXMLLoader loader = new FXMLLoader(
+                    MainApp.class.getResource("/com/igirepay/igirepay/lab3/Login.fxml"));
+            Scene scene = new Scene(loader.load(), 500, 600);
+            scene.getStylesheets().add(
+                    MainApp.class.getResource("/com/igirepay/igirepay/lab3/styles.css").toExternalForm());
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Igire Pay - Login");
-            primaryStage.setResizable(false);
-            primaryStage.show();
-        } catch (Exception e) {
+            primaryStage.setWidth(500);
+            primaryStage.setHeight(600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Called by LoginController after successful login — passes the customer in
+    public static void showDashboard(Customer customer) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    MainApp.class.getResource("/com/igirepay/igirepay/lab3/Dashboard.fxml"));
+            Scene scene = new Scene(loader.load(), 1000, 680);
+            scene.getStylesheets().add(
+                    MainApp.class.getResource("/com/igirepay/igirepay/lab3/styles.css").toExternalForm());
+
+            // Inject the logged-in customer into the dashboard controller
+            DashboardController controller = loader.getController();
+            controller.setCustomer(customer);
+
+            primaryStage.setScene(scene);
+            primaryStage.setWidth(1000);
+            primaryStage.setHeight(680);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void showRegister() {
         try {
-            Parent root = FXMLLoader.load(MainApp.class.getResource("/lab3/Register.fxml"));
-            Scene scene = new Scene(root, 400, 650);
-            scene.getStylesheets().add(MainApp.class.getResource("/lab3/styles.css").toExternalForm());
+            FXMLLoader loader = new FXMLLoader(
+                    MainApp.class.getResource("/com/igirepay/igirepay/lab3/Register.fxml"));
+            Scene scene = new Scene(loader.load(), 500, 680);
+            scene.getStylesheets().add(
+                    MainApp.class.getResource("/com/igirepay/igirepay/lab3/styles.css").toExternalForm());
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Igire Pay - Register");
-            primaryStage.setResizable(false);
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void showDashboard() {
-        try {
-            Parent root = FXMLLoader.load(MainApp.class.getResource("/lab3/Dashboard.fxml"));
-            Scene scene = new Scene(root, 900, 700);
-            scene.getStylesheets().add(MainApp.class.getResource("/lab3/styles.css").toExternalForm());
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("Igire Pay - Dashboard");
-            primaryStage.setResizable(true);
-            primaryStage.show();
-        } catch (Exception e) {
+            primaryStage.setWidth(500);
+            primaryStage.setHeight(680);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }

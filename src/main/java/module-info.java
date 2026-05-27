@@ -11,6 +11,5 @@ module com.igirepay.igirepay {
     exports com.igirepay.igirepay;
     exports lab3;
     opens lab3 to javafx.fxml;
-    exports lab3.service;
-    opens lab3.service to javafx.fxml;
 }
+
