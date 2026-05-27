@@ -5,10 +5,6 @@ import com.igirepay.igirepay.MainApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import lab1.WalletAccount;
-import lab1.SavingsAccount;
-
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import lab1.*;
 import lab2.AccountDAO;
@@ -26,21 +22,19 @@ public class DashboardController {
 
     // Current logged-in customer
     private Customer currentCustomer;
+
     private final CustomerDAO customerDAO = new CustomerDAO();
+    private final AccountDAO accountDAO = new AccountDAO();
+    private final TransactionDAO transactionDAO = new TransactionDAO();
 
-    private AccountDAO accountDAO = new AccountDAO();
-    private TransactionDAO transactionDAO = new TransactionDAO();
-
-    @FXML private Text welcomeText;
+    @FXML private TextField welcomeText;
     @FXML private Label statusLabel;
 
-    // Constructor - Initialize with current customer
+    // Constructor - Initialize with current customer (demo)
     public DashboardController() {
         try {
-            // In real app, this comes from login
-            // Using demo customer for demonstration
+            // In a real app, this comes from login
             currentCustomer = customerDAO.findByPhone("1234567890");
-
             if (currentCustomer == null) {
                 currentCustomer = new Customer(
                         "demo-id",
@@ -60,7 +54,7 @@ public class DashboardController {
     }
 
     private void updateWelcomeText() {
-        if (currentCustomer != null) {
+        if (welcomeText != null && currentCustomer != null) {
             welcomeText.setText("Welcome, " + currentCustomer.getFullName());
         }
     }
@@ -120,7 +114,6 @@ public class DashboardController {
                 return accounts.get(0).getId();
             }
 
-            // Dialog to select account
             Dialog<String> dialog = new Dialog<>();
             dialog.setTitle("Select Account");
             dialog.setHeaderText("Choose an account:");
@@ -136,7 +129,6 @@ public class DashboardController {
 
             dialog.showAndWait();
             return accounts.get(combo.getSelectionModel().getSelectedIndex()).getId();
-
         } catch (SQLException e) {
             showError("Database Error", "Could not load accounts: " + e.getMessage());
             return null;
@@ -218,10 +210,9 @@ public class DashboardController {
                 String refId = "DEP-" + System.currentTimeMillis();
                 transactionDAO.deposit(accountId, amount, refId);
                 statusLabel.setText("Deposited: RWF " + amount);
-                showInfo("Success", "Deposited RWF " + String.format("%,.2f", amount) +
-                        "\nReference: " + refId);
+                showInfo("Success", "Deposited RWF " + String.format("%,.2f", amount) + "\nReference: " + refId);
             } catch (SQLException e) {
-                showError("Database Error", "Deposit failed: " + e.getMessage());
+                showError("SQL Error", "Deposit failed: " + e.getMessage());
             } catch (IllegalStateException e) {
                 showError("Transaction Error", e.getMessage());
             }
@@ -242,23 +233,26 @@ public class DashboardController {
             if (accountId == null) return;
 
             try {
-                // Check balance for insufficient funds
                 Account account = accountDAO.findById(accountId);
+                if (account == null) {
+                    showError("Invalid Account", "Account ID not found.");
+                    return;
+                }
                 if (account.getBalance() < amount) {
-                    showError("Insufficient Balance", "Your balance is RWF " +
-                            String.format("%,.2f", account.getBalance()));
+                    showError("Insufficient Balance", "Your balance is RWF " + String.format("%,.2f", account.getBalance()));
                     return;
                 }
 
                 String refId = "WTH-" + System.currentTimeMillis();
                 transactionDAO.withdraw(accountId, amount, refId);
                 statusLabel.setText("Withdrew: RWF " + amount);
-                showInfo("Success", "Withdrew RWF " + String.format("%,.2f", amount) +
-                        "\nReference: " + refId);
+                showInfo("Success", "Withdrew RWF " + String.format("%,.2f", amount) + "\nReference: " + refId);
             } catch (SQLException e) {
-                showError("Database Error", "Withdrawal failed: " + e.getMessage());
+                showError("SQL Error", "Withdrawal failed: " + e.getMessage());
             } catch (IllegalStateException e) {
                 showError("Transaction Error", e.getMessage());
+            } catch (IllegalArgumentException e) {
+                showError("Invalid Account", e.getMessage());
             }
         });
     }
@@ -295,6 +289,11 @@ public class DashboardController {
 
             try {
                 Account from = accountDAO.findById(accountId);
+                Account to = accountDAO.findById(destId);
+                if (from == null || to == null) {
+                    showError("Invalid Account", "One of the account IDs is invalid.");
+                    return;
+                }
                 if (from.getBalance() < amount) {
                     showError("Insufficient Balance", "Insufficient funds for transfer.");
                     return;
@@ -303,12 +302,13 @@ public class DashboardController {
                 String refId = "TRF-" + System.currentTimeMillis();
                 transactionDAO.transfer(accountId, destId, amount, refId);
                 statusLabel.setText("Transferred: RWF " + amount);
-                showInfo("Success", "Transferred RWF " + String.format("%,.2f", amount) +
-                        "\nTo: " + destId + "\nReference: " + refId);
+                showInfo("Success", "Transferred RWF " + String.format("%,.2f", amount) + "\nTo: " + destId + "\nReference: " + refId);
             } catch (SQLException e) {
-                showError("Database Error", "Transfer failed: " + e.getMessage());
+                showError("SQL Error", "Transfer failed: " + e.getMessage());
             } catch (IllegalStateException e) {
                 showError("Transaction Error", e.getMessage());
+            } catch (IllegalArgumentException e) {
+                showError("Invalid Account", e.getMessage());
             }
         });
     }
@@ -329,17 +329,16 @@ public class DashboardController {
             for (Transaction t : transactions) {
                 sb.append(t.getType()).append(": RWF ")
                         .append(String.format("%,.2f", t.getAmount()))
-                        .append(" (").append(t.getTimestamp()).append(")\n");
+                        .append(" (" ).append(t.getTimestamp()).append(")\n");
             }
-
             showInfo("Transaction History", sb.toString());
         } catch (SQLException e) {
-            showError("Database Error", "Could not load history: " + e.getMessage());
+            showError("SQL Error", "Could not load history: " + e.getMessage());
         }
     }
 
     // ============================
-    // EXERCISE 3.3: Transaction Reports
+    // EXERCISE 3.3: Reports
     // ============================
 
     @FXML
@@ -353,62 +352,64 @@ public class DashboardController {
 
             double totalIn = 0;
             double totalOut = 0;
-            int countIn = 0;
-            int countOut = 0;
-
             for (Account acc : accounts) {
                 List<Transaction> txns = transactionDAO.findByAccountId(acc.getId());
                 for (Transaction t : txns) {
-                    if (t.getType().equals("DEPOSIT")) {
+                    if (t.getType() != null && t.getType().equalsIgnoreCase("DEPOSIT")) {
                         totalIn += t.getAmount();
-                        countIn++;
-                    } else if (t.getType().equals("WITHDRAW") || t.getType().equals("TRANSFER")) {
+                    } else if (t.getType() != null && (t.getType().equalsIgnoreCase("WITHDRAW") || t.getType().equalsIgnoreCase("TRANSFER"))) {
                         totalOut += t.getAmount();
-                        countOut++;
                     }
                 }
             }
 
             String summary = "Total Deposits: RWF " + String.format("%,.2f", totalIn) +
                     "\nTotal Withdrawals: RWF " + String.format("%,.2f", totalOut) +
-                    "\nNet Flow: RWF " + String.format("%,.2f", totalIn - totalOut) +
-                    "\n\nTotal Transactions: " + (countIn + countOut);
+                    "\nNet Flow: RWF " + String.format("%,.2f", totalIn - totalOut);
 
             showInfo("Daily Transaction Summary", summary);
             statusLabel.setText("Viewed daily summary");
         } catch (SQLException e) {
-            showError("Error", "Could not generate summary: " + e.getMessage());
+            showError("SQL Error", "Could not generate summary: " + e.getMessage());
         }
     }
 
+    // Statement for last 7 days
     @FXML
-    private void viewAllTransactions() {
+    private void customerStatement() {
         try {
             List<Account> accounts = accountDAO.findByCustomerId(currentCustomer.getId());
             if (accounts.isEmpty()) {
-                showInfo("Transactions", "No accounts found.");
+                showInfo("Statement", "No accounts found.");
                 return;
             }
 
+            // Use first account for simplicity
+            Account acc = accounts.get(0);
+            List<Transaction> txns = transactionDAO.findByAccountId(acc.getId());
+
+            LocalDateTime from = LocalDate.now().minusDays(7).atStartOfDay();
+            LocalDateTime to = LocalDateTime.now();
+
             StringBuilder sb = new StringBuilder();
-            for (Account acc : accounts) {
-                List<Transaction> txns = transactionDAO.findByAccountId(acc.getId());
-                sb.append("\n--- ").append(acc.getAccountType()).append(" ---\n");
-                for (Transaction t : txns) {
-                    sb.append(t.getType()).append(": RWF ")
+            sb.append("Customer Statement (Last 7 days)\n");
+            sb.append("Account: ").append(acc.getId()).append(" (" + acc.getAccountType() + ")\n\n");
+
+            for (Transaction t : txns) {
+                LocalDateTime ts = t.getTimestamp();
+                if (ts != null && (ts.isAfter(from) || ts.equals(from)) && (ts.isBefore(to) || ts.equals(to))) {
+                    sb.append(t.getTimestamp()).append(" - ")
+                            .append(t.getType()).append(": RWF ")
                             .append(String.format("%,.2f", t.getAmount()))
-                            .append(" [").append(t.getTimestamp()).append("]\n");
+                            .append("\n");
                 }
             }
 
-            showInfo("All Transactions", sb.toString());
+            showInfo("Statement", sb.toString());
         } catch (SQLException e) {
-            showError("Error", e.getMessage());
+            showError("SQL Error", "Could not generate statement: " + e.getMessage());
         }
     }
-// ============================
-    // EXERCISE 3.3: Transaction Reports (Export CSV)
-    // ============================
 
     @FXML
     private void exportCSV() {
@@ -420,22 +421,20 @@ public class DashboardController {
             }
 
             String fileName = "transaction_history_" + LocalDate.now() + ".csv";
-            FileWriter fw = new FileWriter(fileName);
-            PrintWriter pw = new PrintWriter(fw);
+            try (FileWriter fw = new FileWriter(fileName);
+                 PrintWriter pw = new PrintWriter(fw)) {
 
-            // Write CSV Header
-            pw.println("Reference ID,Account ID,Type,Amount,Timestamp");
+                pw.println("Reference ID,Account ID,Type,Amount,Timestamp");
 
-            // Write all transactions
-            for (Account acc : accounts) {
-                List<Transaction> txns = transactionDAO.findByAccountId(acc.getId());
-                for (Transaction t : txns) {
-                    pw.println(t.getReferenceId() + "," + acc.getId() + "," +
-                            t.getType() + "," + t.getAmount() + "," + t.getTimestamp());
+                for (Account acc : accounts) {
+                    List<Transaction> txns = transactionDAO.findByAccountId(acc.getId());
+                    for (Transaction t : txns) {
+                        pw.println(t.getReferenceId() + "," + acc.getId() + "," +
+                                t.getType() + "," + t.getAmount() + "," + t.getTimestamp());
+                    }
                 }
             }
 
-            pw.close();
             statusLabel.setText("Exported to " + fileName);
             showInfo("Export Success", "Transaction history exported to:\n" + fileName);
 
@@ -477,7 +476,6 @@ public class DashboardController {
             String newPin = newPinField.getText();
             String confirmPin = confirmPinField.getText();
 
-            // Validate current PIN
             try {
                 if (!hashPin(currentPin).equals(currentCustomer.getPinHash())) {
                     showError("Invalid PIN", "Current PIN is incorrect.");
@@ -489,9 +487,7 @@ public class DashboardController {
                     return;
                 }
 
-
-                // Validate new PIN format
-                if (newPin.length() != 5 || !newPin.matches("\\d+")) {
+                if (newPin == null || newPin.length() != 5 || !newPin.matches("\\d+")) {
                     showError("Invalid PIN", "New PIN must be exactly 5 digits.");
                     return;
                 }
@@ -501,10 +497,8 @@ public class DashboardController {
                     return;
                 }
 
-                // Update PIN in database
                 currentCustomer.setPinHash(hashPin(newPin));
                 customerDAO.update(currentCustomer);
-
 
                 statusLabel.setText("PIN changed successfully!");
                 showInfo("Success", "Your PIN has been changed successfully.");
@@ -529,19 +523,14 @@ public class DashboardController {
         confirm.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 try {
-                    // Delete all accounts for this customer
                     List<Account> accounts = accountDAO.findByCustomerId(currentCustomer.getId());
                     for (Account acc : accounts) {
                         accountDAO.delete(acc.getId());
                     }
 
-                    // Delete customer
                     customerDAO.delete(currentCustomer.getId());
-
-
                     showInfo("Account Deleted", "Your account has been deleted.");
                     logout();
-
                 } catch (SQLException e) {
                     showError("Database Error", "Could not delete account: " + e.getMessage());
                 }
@@ -555,12 +544,11 @@ public class DashboardController {
 
     @FXML
     private void logout() {
-        Stage stage = (Stage) welcomeText.getScene().getWindow();
+        Stage stage = (Stage) statusLabel.getScene().getWindow();
         stage.close();
         MainApp.showLogin();
     }
 
-    // Helper: Hash PIN
     private String hashPin(String pin) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
@@ -573,3 +561,4 @@ public class DashboardController {
         }
     }
 }
+
