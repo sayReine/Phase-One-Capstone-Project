@@ -1,0 +1,73 @@
+/* styles.css */
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f4f4f4;
+}
+
+/* Containers */
+.card {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, #ccc, 10, 0, 0, 2);
+    -fx-background-radius: 8;
+}
+
+/* Text Colors */
+.text-header {
+    -fx-fill: #008000; /* Bold Green */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.text-sub {
+    -fx-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+/* Buttons */
+.btn-primary {
+    -fx-background-color: #008000; /* Bold Green */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 8 20 8 20;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #006400;
+}
+
+.btn-accent {
+    -fx-background-color: #FF8C00; /* Orange */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-padding: 8 20 8 20;
+}
+
+.btn-accent:hover {
+    -fx-background-color: #e67e00;
+}
+
+/* Inputs */
+.input-field {
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 8;
+}
+
+.input-field:focused {
+    -fx-border-color: #008000; /* Bold Green focus */
+}
+
+/* Tables */
+.table-view .column-header {
+    -fx-background-color: #008000;
+    -fx-text-fill: white;
+}

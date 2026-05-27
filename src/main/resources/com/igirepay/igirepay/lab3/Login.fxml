@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10" styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="lab3.LoginController">
+    <padding>
+        <Insets top="40" bottom="40" left="40" right="40"/>
+    </padding>
+
+    <VBox spacing="5" alignment="CENTER">
+        <Label text="IGIRE PAY" styleClass="text-header"/>
+        <Label text="Secure Payments - Rwanda" styleClass="text-sub" textFill="#FF8C00"/>
+    </VBox>
+
+    <VBox spacing="15" alignment="CENTER" styleClass="card" maxWidth="300" maxHeight="250">
+        <TextField fx:id="phoneField" promptText="Phone Number" styleClass="input-field"/>
+        <PasswordField fx:id="pinField" promptText="PIN (5 digits)" styleClass="input-field"/>
+
+        <Button text="LOGIN" styleClass="btn-primary" onAction="#handleLogin" maxWidth="Infinity"/>
+        <Button text="REGISTER" styleClass="btn-accent" onAction="#handleRegister" maxWidth="Infinity"/>
+        <Button text="EXIT" styleClass="btn-primary" onAction="#handleExit" maxWidth="Infinity"/>
+    </VBox>
+
+    <Label fx:id="statusLabel" text="" textFill="red"/>
+</VBox>
+

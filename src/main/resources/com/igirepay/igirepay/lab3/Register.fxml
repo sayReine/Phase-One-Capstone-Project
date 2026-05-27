@@ -1,0 +1,34 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<VBox styleClass="root" alignment="CENTER" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="lab3.RegisterController">
+    <padding>
+        <Insets top="30" bottom="30" left="40" right="40"/>
+    </padding>
+
+    <!-- Header -->
+    <VBox spacing="5" alignment="CENTER" style="-fx-padding: 0 0 20 0;">
+        <Text text="CREATE ACCOUNT" styleClass="header-text"/>
+        <Text text="Join Igire Pay Today" styleClass="sub-header"/>
+    </VBox>
+
+    <!-- Form Card -->
+    <VBox styleClass="card" spacing="15" alignment="CENTER" prefWidth="320">
+
+        <TextField fx:id="fullNameField" promptText="Full Name" styleClass="text-field" maxWidth="280"/>
+        <TextField fx:id="emailField" promptText="Email Address" styleClass="text-field" maxWidth="280"/>
+        <TextField fx:id="phoneField" promptText="Phone Number" styleClass="text-field" maxWidth="280"/>
+
+        <PasswordField fx:id="pinField" promptText="Create PIN (5 digits)" styleClass="text-field" maxWidth="280"/>
+        <PasswordField fx:id="confirmPinField" promptText="Confirm PIN" styleClass="text-field" maxWidth="280"/>
+
+        <Button text="REGISTER" styleClass="button-primary" onAction="#handleRegister" maxWidth="280"/>
+        <Button text="BACK TO LOGIN" styleClass="button-accent" onAction="#handleBack" maxWidth="280"/>
+
+        <Label fx:id="statusLabel" style="-fx-text-fill: #dc3545; -fx-font-size: 12px;"/>
+    </VBox>
+</VBox>
