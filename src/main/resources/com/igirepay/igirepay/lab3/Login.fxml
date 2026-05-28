@@ -6,6 +6,10 @@
            xmlns="http://javafx.com/javafx/21"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="lab3.LoginController">
+    <ScrollPane fitToWidth="true" fitToHeight="true"
+                hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                style="-fx-background: transparent; -fx-background-color: transparent;">
+        <StackPane minHeight="600" style="-fx-background-color: transparent;" alignment="CENTER">
     <VBox style="-fx-background-color: white; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 30, 0, 0, 8); -fx-padding: 40 36; -fx-max-width: 360px;"
           spacing="0" alignment="CENTER" maxWidth="360">
         <VBox alignment="CENTER" spacing="4" style="-fx-padding: 0 0 28 0;">
@@ -42,4 +46,6 @@
         <Label text="© 2025 IgirePay · Igire Rwanda Organization"
                style="-fx-font-size: 10px; -fx-text-fill: #aaaaaa; -fx-padding: 20 0 0 0;"/>
     </VBox>
+        </StackPane>
+    </ScrollPane>
 </StackPane>

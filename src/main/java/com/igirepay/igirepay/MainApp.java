@@ -3,6 +3,7 @@ package com.igirepay.igirepay;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lab1.Customer;
 import lab3.DashboardController;
@@ -19,6 +20,9 @@ public class MainApp extends Application {
         primaryStage.setTitle("IgirePay — Igire Rwanda Organization");
         primaryStage.setMinWidth(900);
         primaryStage.setMinHeight(600);
+        primaryStage.setResizable(true);
+        Image icon = new Image(MainApp.class.getResourceAsStream("/com/igirepay/igirepay/icon.jpeg"));
+        primaryStage.getIcons().add(icon);
         showLogin();
         primaryStage.show();
     }

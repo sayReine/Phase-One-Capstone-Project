@@ -5,6 +5,9 @@ import com.igirepay.igirepay.MainApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import lab1.Customer;
+import lab1.SavingsAccount;
+import lab1.WalletAccount;
+import lab2.AccountDAO;
 import lab2.CustomerDAO;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -20,6 +23,7 @@ public class RegisterController {
     @FXML private Label statusLabel;
 
     private CustomerDAO customerDAO = new CustomerDAO();
+    private AccountDAO  accountDAO  = new AccountDAO();
 
     @FXML
     private void handleRegister() {
@@ -76,6 +80,10 @@ public class RegisterController {
             );
 
             customerDAO.create(customer);
+
+            // Auto-create one wallet and one savings account for the new customer
+            accountDAO.create(new WalletAccount(customerId));
+            accountDAO.create(new SavingsAccount(customerId));
 
             showAlert(Alert.AlertType.INFORMATION, "Registration Successful",
                     "Your account has been created. Please login.");

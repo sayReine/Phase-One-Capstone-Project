@@ -15,9 +15,8 @@ public class Connect {
     public static Connection getConnection() throws SQLException {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-//            System.out.println("database connection successfull");
         } catch (SQLException e) {
-            throw new SQLException("postgres driver not found:", e);
+            throw new SQLException("Cannot connect to database: " + e.getMessage(), e);
         }
 
         return connection;

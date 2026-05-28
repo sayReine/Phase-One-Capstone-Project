@@ -31,7 +31,7 @@ public class SavingsAccount extends Account{
 
 
 
-            setBalance((int) (getBalance() - amount  ));
+            setBalance(getBalance() - amount);
             System.out.println("transaction successfull /n you sent"+amount+"a fee of "+fee+"has been applied "+getBalance());
             return true;
 
@@ -41,7 +41,7 @@ public class SavingsAccount extends Account{
     @Override
     public boolean deposit(double amount, String referenceId) {
         if(amount <= 0 ) return false;
-        setBalance((int) (getBalance() + amount));
+        setBalance(getBalance() + amount);
         return true;
     }
 

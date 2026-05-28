@@ -9,14 +9,14 @@ public class WalletAccount extends Account{
     public boolean withdraw(double amount, String referenceId) {
 
        if(amount <= 0 || amount >= getBalance()  ) return false;
-       setBalance((int) (getBalance() - amount));
+       setBalance(getBalance() - amount);
        return true;
     }
 
     @Override
     public boolean deposit(double amount, String referenceId) {
         if(amount <= 0 ) return false;
-        setBalance((int) (getBalance() + amount));
+        setBalance(getBalance() + amount);
         return true;
     }
 

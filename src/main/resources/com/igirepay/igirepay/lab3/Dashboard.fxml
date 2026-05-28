@@ -13,7 +13,10 @@
                 <Label text="IgirePay" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #7ab893;"/>
                 <Label fx:id="welcomeLabel" text="Loading..." style="-fx-font-size: 11px; -fx-text-fill: #4a7a5a;"/>
             </VBox>
-            <VBox spacing="3" style="-fx-padding: 16 10 10 10;">
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox spacing="3" style="-fx-padding: 16 10 10 10;">
                 <Label text="MAIN" style="-fx-padding: 16 12 6 16; -fx-font-size: 10px; -fx-text-fill: #3a6a4a; -fx-font-weight: bold;"/>
                 <Button text="🏠   Dashboard" onAction="#showHome" maxWidth="Infinity"
                         style="-fx-background-color: transparent; -fx-text-fill: #8abf9a; -fx-font-size: 13px; -fx-padding: 11 16; -fx-alignment: CENTER-LEFT; -fx-background-radius: 7; -fx-cursor: hand;"/>
@@ -39,10 +42,12 @@
                 <Button text="📁   Export CSV"      onAction="#exportCSV"        maxWidth="Infinity"
                         style="-fx-background-color: transparent; -fx-text-fill: #8abf9a; -fx-font-size: 13px; -fx-padding: 11 16; -fx-alignment: CENTER-LEFT; -fx-background-radius: 7; -fx-cursor: hand;"/>
                 <Label text="SETTINGS" style="-fx-padding: 10 12 6 16; -fx-font-size: 10px; -fx-text-fill: #3a6a4a; -fx-font-weight: bold;"/>
+                <Button text="💰   Request Loan" onAction="#showLoan" maxWidth="Infinity"
+                        style="-fx-background-color: transparent; -fx-text-fill: #8abf9a; -fx-font-size: 13px; -fx-padding: 11 16; -fx-alignment: CENTER-LEFT; -fx-background-radius: 7; -fx-cursor: hand;"/>
                 <Button text="🔑   Change PIN" onAction="#showChangePin" maxWidth="Infinity"
                         style="-fx-background-color: transparent; -fx-text-fill: #8abf9a; -fx-font-size: 13px; -fx-padding: 11 16; -fx-alignment: CENTER-LEFT; -fx-background-radius: 7; -fx-cursor: hand;"/>
-            </VBox>
-            <Region VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </ScrollPane>
             <VBox style="-fx-padding: 10 10 16 10;">
                 <Button text="🚪   Logout" onAction="#logout" maxWidth="Infinity"
                         style="-fx-background-color: #5c1a1a; -fx-text-fill: #ffaaaa; -fx-font-size: 13px; -fx-padding: 11 16; -fx-alignment: CENTER-LEFT; -fx-background-radius: 7; -fx-cursor: hand;"/>
@@ -57,8 +62,18 @@
                 <Label fx:id="balanceBadge" text="Total: RWF 0.00"
                        style="-fx-background-color: #e8f5ec; -fx-text-fill: #1a5c2e; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 12; -fx-background-radius: 20;"/>
             </HBox>
+            <ScrollPane fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        hbarPolicy="NEVER"
+                        vbarPolicy="AS_NEEDED"
+                        pannable="true"
+                        style="-fx-background: #f0f4f1;">
+            <content>
             <StackPane fx:id="contentPane" VBox.vgrow="ALWAYS"
                        style="-fx-background-color: #f0f4f1; -fx-padding: 24;"/>
+            </content>
+
+        </ScrollPane>
             <HBox style="-fx-background-color: #0f3d1e; -fx-padding: 10 20;" alignment="CENTER_LEFT">
                 <Label fx:id="statusLabel" text="Ready"
                        style="-fx-text-fill: #7ab893; -fx-font-size: 12px;"/>
