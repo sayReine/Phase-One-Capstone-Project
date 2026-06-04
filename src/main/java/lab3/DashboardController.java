@@ -79,7 +79,9 @@ public class DashboardController {
 
     // ── HOME ─────────────────────────────────────────────────────
 
-    @FXML public void showHome() { setPage("Dashboard", buildHomePanel()); }
+    @FXML public void showHome() {
+
+        setPage("Dashboard", buildHomePanel()); }
 
     private ScrollPane buildHomePanel() {
         VBox root = new VBox(20);

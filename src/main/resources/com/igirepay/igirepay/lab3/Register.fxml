@@ -9,7 +9,7 @@
     <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40 0;">
             <VBox alignment="CENTER" spacing="4">
-                <Label text="IRO" style="-fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: #c8860a;"/>
+                <Label text="IRO Ltd" style="-fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: #c8860a;"/>
                 <Label text="Create Your Account" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
                 <Label text="Join IgirePay — Rwanda's Secure Wallet" style="-fx-font-size: 12px; -fx-text-fill: rgba(255,255,255,0.6);"/>
             </VBox>

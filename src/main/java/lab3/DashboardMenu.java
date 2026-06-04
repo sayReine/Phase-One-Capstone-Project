@@ -11,7 +11,7 @@ public class DashboardMenu {
 
     public DashboardMenu(Customer customer, Scanner input) {
         this.customer = customer;
-        this.input    = input;
+        this.input = input;
     }
 
     public void show() {

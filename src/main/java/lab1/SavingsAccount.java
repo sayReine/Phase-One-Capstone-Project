@@ -17,7 +17,6 @@ public class SavingsAccount extends Account{
         }else {
             fee = 100;
         }
-
         amount +=  fee;
 
         if(amount <= 0 || amount >= getBalance()){

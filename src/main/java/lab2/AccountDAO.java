@@ -15,9 +15,11 @@ public class AccountDAO implements DAO<Account> {
 
     @Override
     public void create(Account account) throws SQLException {
-        // ✅ Cast id and customer_id to uuid so PostgreSQL accepts them
+
         String sql = "INSERT INTO accounts (id, customer_id, account_type, balance) " +
                 "VALUES (?, ?, ?, ?)";
+
+
         try (PreparedStatement ps = Connect.getConnection().prepareStatement(sql)) {
             ps.setString(1, account.getId());
             ps.setString(2, account.getcustomerId());
