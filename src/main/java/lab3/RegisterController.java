@@ -41,7 +41,7 @@ public class RegisterController {
         }
 
         if (!email.contains("@")) {
-            statusLabel.setText("Invalid email format.");
+            statusLabel.setText("Invalid email format. Missing the '@'");
             return;
         }
 
@@ -52,6 +52,10 @@ public class RegisterController {
 
         if (!pin.equals(confirmPin)) {
             statusLabel.setText("PINs do not match.");
+            return;
+        }
+        if(phone.length()<10) {
+            statusLabel.setText("The phone number must have atleast 10 digits");
             return;
         }
 
